@@ -43,11 +43,52 @@ operación seleccionada.
 #  Variables
 # ___________________________________________________
 
+taxisfile = 'taxi-trips-wrvz-psew-subset-small.csv'
 
 # ___________________________________________________
 #  Menu principal
 # ___________________________________________________
 
+def printMenu():
+    print("\n")
+    print("***********************")
+    print("Bienvenido")
+    print("1 - Inicializar el catalogo")
+    print("2 - Cargar datos")
+    print("3 - Req. 1: Reporte de Información Compañias y Taxis")
+    print("0 - Salir")
+    print("***********************")
+
+
 """
 Menu principal
 """
+
+while True:
+    printMenu()
+    inputs = input("Seleccione una opción: ")
+
+    if int(inputs[0]) == 1:
+        cont = controller.init()
+    
+    elif int(inputs[0]) == 2:
+        controller.loadData(cont, taxisfile)
+    
+    elif int(inputs[0]) == 3:
+        M = int(input("Ingrese el tamaño deseado del ranking (taxis): "))
+        N = int(input("Ingrese el tamaño deseado del ranking (servicios): "))
+        tamTaxis = controller.taxisSize(cont)
+        tamCompanies = controller.companiesSize(cont)
+        print("\n")
+        print("Taxis registrados: " + str(tamTaxis))
+        print("Compañias registradas: " + str(tamCompanies))
+        print("\n")
+        print("Ranking compañias por número de taxis afiliados: ")
+        rank = controller.companyRanking(cont, M)
+        print("\n")
+        print("Ranking compañias por servicios prestados: ")
+        rank = controller.servicesRanking(cont, N)
+    
+    else:
+        sys.exit(0)
+sys.exit(0)

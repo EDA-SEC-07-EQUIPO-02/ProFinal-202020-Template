@@ -40,12 +40,43 @@ recae sobre el controlador.
 #  Inicializacion del catalogo
 # ___________________________________________________
 
+def init():
+    analyzer = model.analyzer()
+    return analyzer
 
 # ___________________________________________________
 #  Funciones para la carga de datos y almacenamiento
 #  de datos en los modelos
 # ___________________________________________________
 
+def loadData(analyzer, taxisfile):
+
+    taxisfile = cf.data_dir + taxisfile
+    input_file = csv.DictReader(open(taxisfile, encoding="utf-8"), delimiter = ",")
+
+    for trip in input_file:
+        model.addTrip(analyzer, trip)
+        model.addTaxi(analyzer, trip)
+        model.addCompany(analyzer, trip)
+        model.addCompanyTaxi(analyzer, trip)
+    return analyzer
+
 # ___________________________________________________
 #  Funciones para consultas
 # ___________________________________________________
+
+def companiesSize(analyzer):
+    tam = model.companiesSize(analyzer)
+    return tam
+
+def taxisSize(analyzer):
+    tam = model.taxisSize(analyzer)
+    return tam
+
+def companyRanking(analyzer, M):
+    maxComp = model.companyRanking(analyzer, M)
+    return maxComp
+
+def servicesRanking(analyzer, N):
+    rank = model.servicesRanking(analyzer, N)
+    return rank
