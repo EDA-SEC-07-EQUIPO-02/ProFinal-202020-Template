@@ -93,22 +93,22 @@ while True:
         controller.servicesRanking(cont, N)
         rank = controller.servicesRanking(cont, N)
 
-    elif int(inputs[0]==4):
+    elif int(inputs[0]) == 4:
         origin=(input("ingrese zona de origen"))
         destination=(input("ingrese zona de destino"))
-        initial_date=(input("hora inicial(YYYY-MM-DD")))
+        initial_date=(input("hora inicial(YYYY-MM-DD"))
         final_date=(input("hora final(YYYY-MM-DDuu"))
-        R= controller.mejorHorario(analyzer, origin, destination, initial_date, final_date):
+        R= controller.mejorHorario(analyzer, origin, destination, initial_date, final_date)
         print("\n")
         print(R)
     
-    elif int(inputs[0]) == 4:
+    elif int(inputs[0]) == 5:
         N = int(input("Ingrese el tamaño deseado del ranking (puntos): "))
         fecha = input("Ingrese la fecha (YYYY-MM-DD): ")
         print("\n")
         controller.taxisPointsByDate(cont, N, fecha)
     
-    elif int(inputs[0]) == 5:
+    elif int(inputs[0]) == 6:
         M = int(input("Ingrese el tamaño deseado del ranking (puntos): "))
         fecha1 = input("Ingrese la primera fecha (YYYY-MM-DD): ")
         fecha2 = input("Ingrese la segunda fecha (YYYY-MM-DD): ")

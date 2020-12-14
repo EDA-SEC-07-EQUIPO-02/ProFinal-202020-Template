@@ -50,7 +50,7 @@ def analyzer():
     analyzer = {"trips": None,
                 "taxis": None,
                 "companies": None,
-                "companiesTaxis": None
+                "companiesTaxis": None,
                 "dateIndex": None
                 }
     
@@ -58,7 +58,7 @@ def analyzer():
     analyzer["taxis"] = lt.newList("ARRAY_LIST", cmpTaxiId)
     analyzer["companies"] = lt.newList("ARRAY_LIST", None)
     analyzer["companiesTaxis"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
-    anlayzer["dateIndex"]= om.newmap(omaptype='RBT', comparefunction=cmpDates)
+    analyzer["dateIndex"]= om.newMap(omaptype='RBT', comparefunction=cmpDates)
     analyzer["companiesRanking"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
     analyzer["companiesServices"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
     analyzer["taxisPoints"] = om.newMap(omaptype="BST", comparefunction=cmpTaxiId)
@@ -310,7 +310,7 @@ def taxisPointsByDateRange(analyzer, M, fecha1, fecha2):
         x = "x"
         info = str(tam - k + 1) + ". Taxi ID: " + str(taxisN) + ", Puntos: " + str(puntos)
         print(info)
-        
+
 def mejorHorario(analyzer, origin, destination, initial_date, final_date):
     ruta=[]
     lista=om.values(analyzer['dateIndex'], initial_date, final_date)
