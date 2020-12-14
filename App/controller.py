@@ -80,3 +80,7 @@ def companyRanking(analyzer, M):
 def servicesRanking(analyzer, N):
     rank = model.servicesRanking(analyzer, N)
     return rank
+
+def mejorHorario(analyzer, origin, destination, initial_date, final_date):
+    r=model-mejorHorario(analyzer, origin, destination, initial_date, final_date):
+    return r   

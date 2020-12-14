@@ -55,7 +55,8 @@ def printMenu():
     print("Bienvenido")
     print("1 - Inicializar el catalogo")
     print("2 - Cargar datos")
-    print("3 - Req. 1: Reporte de Información Compañias y Taxis")
+    print("3 - Req- A1: Reporte de Información Compañias y Taxis")
+    print("4- req- C3: Consulta del Mejor Horario en Taxi entre 2 “community areas")
     print("0 - Salir")
     print("***********************")
 
@@ -88,6 +89,15 @@ while True:
         print("\n")
         print("Ranking compañias por servicios prestados: ")
         rank = controller.servicesRanking(cont, N)
+
+    elif int(inputs[0]==4):
+        origin=(input("ingrese zona de origen"))
+        destination=(input("ingrese zona de destino"))
+        initial_date=(input("hora inicial(YYYY-MM-DD")))
+        final_date=(input("hora final(YYYY-MM-DDuu"))
+        R= controller.mejorHorario(analyzer, origin, destination, initial_date, final_date):
+        print("\n")
+        print(R)
     
     else:
         sys.exit(0)
