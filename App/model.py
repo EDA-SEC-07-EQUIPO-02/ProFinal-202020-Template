@@ -59,6 +59,7 @@ def analyzer():
     analyzer["companiesTaxis"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
     analyzer["companiesRanking"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
     analyzer["companiesServices"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
+    analyzer["taxisPoints"] = om.newMap(omaptype="BST", comparefunction=cmpTaxiId)
 
     return analyzer
 
@@ -74,9 +75,32 @@ def addTrip(analyzer, trip):
 def addTaxi(analyzer, trip):
 
     ids = analyzer["taxis"]
+    newPoints = 0
+    tripMiles = trip["trip_miles"]
+    tripTotal = trip["trip_total"]
+    timeStamp = trip["trip_start_timestamp"]
+    tripDate = timeStamp[0:10]
+    if tripTotal != "0.0" and tripTotal != "":
+        newPoints = float(tripMiles) / float(tripTotal)
+    else:
+        newPoints = 0
     
     if trip["taxi_id"] not in ids["elements"]:
         lt.addLast(analyzer["taxis"], trip["taxi_id"])
+        pointsDate = newPoints, tripDate
+        pointsList = lt.newList("ARRAY_LIST", None)
+        lt.addLast(pointsList, pointsDate)
+        om.put(analyzer["taxisPoints"], trip["taxi_id"], pointsList)
+    else:
+        info = om.get(analyzer["taxisPoints"], trip["taxi_id"])
+        pointsList = info["value"]
+        pointsDate = lt.lastElement(pointsList)
+        oldPoints = pointsDate[0]
+        points = oldPoints + newPoints
+        newPointsDate = points, tripDate
+        lt.addLast(pointsList, newPointsDate)
+        om.put(analyzer["taxisPoints"], trip["taxi_id"], pointsList)
+
     return analyzer
 
 def addCompany(analyzer, trip):
@@ -187,6 +211,102 @@ def servicesRanking(analyzer, N):
         lista = pareja["value"]
         nums = lista["elements"]
         info = str(tam - k + 1) + ". " + str(nums[0]) + ": " + str(emp)
+        print(info)
+
+def taxisPointsByDate(analyzer, N, fecha):
+
+    taxis = om.keySet(analyzer["taxisPoints"])
+    #pointsLists = om.valueSet(analyzer["taxisPoints"])
+    rankingFechas = om.newMap(omaptype="BST", comparefunction=cmpTaxiId)
+
+    for i in range(lt.size(taxis)):
+        puntosLlave = 0.00000
+        taxi = lt.getElement(taxis, i)
+        info = om.get(analyzer["taxisPoints"], taxi)
+        tuplas = info["value"]
+
+        for j in range(lt.size(tuplas)):
+            tupla = lt.getElement(tuplas, j)
+            puntosFecha = tupla[1]
+            if tupla[0] > puntosLlave and tupla[1] == fecha:
+                puntosLlave = tupla[0]
+                puntosFecha = tupla[1]
+
+        if puntosFecha == fecha and om.contains(rankingFechas, puntosLlave) == False:
+
+            taxiList = lt.newList("ARRAY_LIST", None)
+            lt.addLast(taxiList, taxi)
+            om.put(rankingFechas, puntosLlave, taxiList)
+        elif puntosFecha == fecha and om.contains(rankingFechas, puntosLlave) == True:
+            info = om.get(rankingFechas, puntosLlave)
+            taxiList = info["value"]
+            lt.addLast(taxiList, taxi)
+            om.put(rankingFechas, puntosLlave, taxiList)
+
+    tam = om.size(rankingFechas)
+    tam = tam - 1
+
+    for i in range(N):
+        k = tam - i
+        puntos = om.select(rankingFechas, k)
+        pareja = om.get(rankingFechas, puntos)
+        lista = pareja["value"]
+        taxisN = lista["elements"]
+        info = str(tam - k + 1) + ". Taxi ID: " + str(taxisN) + ", Puntos: " + str(puntos)
+        print(info)
+
+def taxisPointsByDateRange(analyzer, M, fecha1, fecha2):
+
+    taxis = om.keySet(analyzer["taxisPoints"])
+    rankingFechas = om.newMap(omaptype="BST", comparefunction=cmpTaxiId)
+    dia1 = fecha1[8:10]
+    mes1 = fecha1[5:7]
+    año1 = fecha1[0:4]
+    dia2 = fecha1[8:10]
+    mes2 = fecha1[5:7]
+    año2 = fecha1[0:4]
+
+    for i in range(lt.size(taxis)):
+        puntosLlave = 0.00000
+        taxi = lt.getElement(taxis, i)
+        info = om.get(analyzer["taxisPoints"], taxi)
+        tuplas = info["value"]
+
+        for j in range(lt.size(tuplas)):
+            tupla = lt.getElement(tuplas, j)
+            puntosFecha = tupla[1]
+            dia = puntosFecha[8:10]
+            mes = puntosFecha[5:7]
+            año = puntosFecha[0:4]
+            if (año1 < año and año < año2) or año1 == año or año2 == año:
+                if (mes1 < mes and mes < mes2) or mes1 == mes or mes2 == mes:
+                    if (dia1 < dia and dia < dia2) or dia1 == dia or dia2 == dia:
+                        if tupla[0] > puntosLlave:
+                            puntosLlave = tupla[0]
+                            puntosFecha = tupla[1]
+
+        if om.contains(rankingFechas, puntosLlave) == False:
+
+            taxiList = lt.newList("ARRAY_LIST", None)
+            lt.addLast(taxiList, taxi)
+            om.put(rankingFechas, puntosLlave, taxiList)
+        elif om.contains(rankingFechas, puntosLlave) == True:
+            info = om.get(rankingFechas, puntosLlave)
+            taxiList = info["value"]
+            lt.addLast(taxiList, taxi)
+            om.put(rankingFechas, puntosLlave, taxiList)
+
+    tam = om.size(rankingFechas)
+    tam = tam - 1
+
+    for i in range(M):
+        k = tam - i
+        puntos = om.select(rankingFechas, k)
+        pareja = om.get(rankingFechas, puntos)
+        lista = pareja["value"]
+        taxisN = lista["elements"]
+        x = "x"
+        info = str(tam - k + 1) + ". Taxi ID: " + str(taxisN) + ", Puntos: " + str(puntos)
         print(info)
 
 def taxisSize(analyzer):

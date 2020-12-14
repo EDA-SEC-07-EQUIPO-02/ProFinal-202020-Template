@@ -56,6 +56,8 @@ def printMenu():
     print("1 - Inicializar el catalogo")
     print("2 - Cargar datos")
     print("3 - Req. 1: Reporte de Información Compañias y Taxis")
+    print("4 - Req. 2: Ranking de taxis por puntos en una fecha determinada")
+    print("5 - Req. 2: Ranking de taxis por puntos en un rango de fechas")
     print("0 - Salir")
     print("***********************")
 
@@ -84,11 +86,24 @@ while True:
         print("Compañias registradas: " + str(tamCompanies))
         print("\n")
         print("Ranking compañias por número de taxis afiliados: ")
-        rank = controller.companyRanking(cont, M)
+        controller.companyRanking(cont, M)
         print("\n")
         print("Ranking compañias por servicios prestados: ")
-        rank = controller.servicesRanking(cont, N)
+        controller.servicesRanking(cont, N)
     
+    elif int(inputs[0]) == 4:
+        N = int(input("Ingrese el tamaño deseado del ranking (puntos): "))
+        fecha = input("Ingrese la fecha (YYYY-MM-DD): ")
+        print("\n")
+        controller.taxisPointsByDate(cont, N, fecha)
+    
+    elif int(inputs[0]) == 5:
+        M = int(input("Ingrese el tamaño deseado del ranking (puntos): "))
+        fecha1 = input("Ingrese la primera fecha (YYYY-MM-DD): ")
+        fecha2 = input("Ingrese la segunda fecha (YYYY-MM-DD): ")
+        print("\n")
+        controller.taxisPointsByDateRange(cont, M, fecha1, fecha2)
+
     else:
         sys.exit(0)
 sys.exit(0)

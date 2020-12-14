@@ -80,3 +80,11 @@ def companyRanking(analyzer, M):
 def servicesRanking(analyzer, N):
     rank = model.servicesRanking(analyzer, N)
     return rank
+
+def taxisPointsByDate(analyzer, N, fecha):
+    rank = model.taxisPointsByDate(analyzer, N, fecha)
+    return rank
+
+def taxisPointsByDateRange(analyzer, M, fecha1, fecha2):
+    rank = model.taxisPointsByDateRange(analyzer, M, fecha1, fecha2)
+    return rank
