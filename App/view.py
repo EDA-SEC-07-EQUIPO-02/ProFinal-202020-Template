@@ -56,8 +56,9 @@ def printMenu():
     print("1 - Inicializar el catalogo")
     print("2 - Cargar datos")
     print("3 - Req. 1: Reporte de Información Compañias y Taxis")
-    print("4 - Req. 2: Ranking de taxis por puntos en una fecha determinada")
-    print("5 - Req. 2: Ranking de taxis por puntos en un rango de fechas")
+    print("4- req- C3: Consulta del Mejor Horario en Taxi entre 2 “community areas")
+    print("5 - Req. 2: Ranking de taxis por puntos en una fecha determinada")
+    print("6 - Req. 2: Ranking de taxis por puntos en un rango de fechas")
     print("0 - Salir")
     print("***********************")
 
@@ -90,6 +91,16 @@ while True:
         print("\n")
         print("Ranking compañias por servicios prestados: ")
         controller.servicesRanking(cont, N)
+        rank = controller.servicesRanking(cont, N)
+
+    elif int(inputs[0]==4):
+        origin=(input("ingrese zona de origen"))
+        destination=(input("ingrese zona de destino"))
+        initial_date=(input("hora inicial(YYYY-MM-DD")))
+        final_date=(input("hora final(YYYY-MM-DDuu"))
+        R= controller.mejorHorario(analyzer, origin, destination, initial_date, final_date):
+        print("\n")
+        print(R)
     
     elif int(inputs[0]) == 4:
         N = int(input("Ingrese el tamaño deseado del ranking (puntos): "))

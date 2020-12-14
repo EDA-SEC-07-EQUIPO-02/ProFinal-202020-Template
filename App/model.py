@@ -51,12 +51,14 @@ def analyzer():
                 "taxis": None,
                 "companies": None,
                 "companiesTaxis": None
+                "dateIndex": None
                 }
     
     analyzer["trips"] = lt.newList("ARRAY_LIST", None)
     analyzer["taxis"] = lt.newList("ARRAY_LIST", cmpTaxiId)
     analyzer["companies"] = lt.newList("ARRAY_LIST", None)
     analyzer["companiesTaxis"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
+    anlayzer["dateIndex"]= om.newmap(omaptype='RBT', comparefunction=cmpDates)
     analyzer["companiesRanking"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
     analyzer["companiesServices"] = om.newMap(omaptype="BST", comparefunction=cmpCompanies)
     analyzer["taxisPoints"] = om.newMap(omaptype="BST", comparefunction=cmpTaxiId)
@@ -308,6 +310,29 @@ def taxisPointsByDateRange(analyzer, M, fecha1, fecha2):
         x = "x"
         info = str(tam - k + 1) + ". Taxi ID: " + str(taxisN) + ", Puntos: " + str(puntos)
         print(info)
+        
+def mejorHorario(analyzer, origin, destination, initial_date, final_date):
+    ruta=[]
+    lista=om.values(analyzer['dateIndex'], initial_date, final_date)
+    iterator=it.newIterator(lista)
+    fecha=it.next(lista)
+    startTime=taxi["trip_start_timestamp"]
+    tiempoEstimado=taxi["trip_seconds"]
+    a=""
+    b=""
+    while it.hasNext(iterator):
+          newIterator=it.newIterator(fecha)
+          while it.hasNext(newIterator):
+              taxi=it.next(newIterator)
+              if taxi["pickup_community_area"]=="":
+                  if taxi["dorpoff_community_area"]== destination:
+                      d= True
+                  if taxi["pickup_community_area"]== origin:
+                      b=True    
+              if a or b == "":
+                  print("no hay rutas para ese horario")
+    ruta.append(taxi["pickup_community_area"])
+    return ruta, startTime, tiempoEstimado
 
 def taxisSize(analyzer):
     tam = lt.size(analyzer["taxis"])
@@ -346,6 +371,14 @@ def cmpCompanies(comp1, comp2):
     if comp1 == comp2:
         return 0
     elif comp1 > comp2:
+        return 1
+    else:
+        return -1
+
+def cmpDates(date1, date2):
+    if date1 == date2:
+        return 0
+    elif date1 > date2:
         return 1
     else:
         return -1
